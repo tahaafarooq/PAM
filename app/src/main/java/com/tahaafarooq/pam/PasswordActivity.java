@@ -25,6 +25,10 @@ public class PasswordActivity extends AppCompatActivity {
 
         if (!(usernameInp.getText().toString().isEmpty() && passwordInp.getText().toString().isEmpty() && hostInp.getText().toString().isEmpty())) {
             // function to take the inputs and encrypt them and write into a file
+            String username = usernameInp.getText().toString();
+            String password = passwordInp.getText().toString();
+            String host = hostInp.getText().toString();
+
 
         } else {
             key.setText("Try with correct inputs");
