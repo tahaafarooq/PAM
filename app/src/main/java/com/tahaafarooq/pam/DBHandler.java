@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 public class DBHandler extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "pam_db";
@@ -39,6 +41,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.insert(TABLE_NAME, null, values);
         db.close();
+    }
+
+    public ArrayList<PasswordModal> readCredentials() {
+        // something comes here
     }
 
     @Override
