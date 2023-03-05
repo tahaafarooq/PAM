@@ -15,7 +15,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String PASSWORD_COL = "password";
     private static final String HOST_COL = "host";
 
-    private DBHandler(Context context) {
+    DBHandler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
