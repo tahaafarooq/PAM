@@ -2,6 +2,7 @@ package com.tahaafarooq.pam;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -45,6 +46,17 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public ArrayList<PasswordModal> readCredentials() {
         // something comes here
+        SQLiteDatabase db =  this.getReadableDatabase();
+        Cursor cursorPassword = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        ArrayList<PasswordModal> passwordModalArrayList = new ArrayList<>();
+
+        if (cursorPassword.moveToFirst()) {
+            do {
+                passwordModalArrayList.add(new PasswordModal(cursorPassword.getString(1), cursorPassword.getString(2), cursorPassword.getString(3)));
+            } while (cursorPassword.moveToNext());
+        }
+        cursorPassword.close();
+        return passwordModalArrayList;
     }
 
     @Override
