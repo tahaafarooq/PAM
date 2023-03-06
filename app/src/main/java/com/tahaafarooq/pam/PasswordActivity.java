@@ -3,14 +3,22 @@ package com.tahaafarooq.pam;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 
 public class PasswordActivity extends AppCompatActivity {
     EditText usernameInp, passwordInp, hostInp;
     Button saveBtn;
     TextView key;
+    DBHandler dbHandler;
+    KeyGenerator keyGen;
+
+    static final int READ_BLOCK_SIZE=100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,15 +31,37 @@ public class PasswordActivity extends AppCompatActivity {
         saveBtn = (Button) findViewById(R.id.save_btn);
         key = (TextView) findViewById(R.id.key);
 
-        if (!(usernameInp.getText().toString().isEmpty() && passwordInp.getText().toString().isEmpty() && hostInp.getText().toString().isEmpty())) {
-            // function to take the inputs and encrypt them and write into a file
-            String username = usernameInp.getText().toString();
-            String password = passwordInp.getText().toString();
-            String host = hostInp.getText().toString();
+        dbHandler = new DBHandler(PasswordActivity.this);
+        keyGen = new KeyGenerator();
 
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String keyOut = keyGen.generateKey(8);
+                String username = usernameInp.getText().toString();
+                String password = passwordInp.getText().toString();
+                String host = hostInp.getText().toString();
 
-        } else {
-            key.setText("Try with correct inputs");
-        }
+                if (username.isEmpty() && password.isEmpty() && host.isEmpty()) {
+                    key.setText("Please Enter The Data Required");
+                    return;
+                }
+
+                try {
+                    FileOutputStream file = openFileOutput("key.txt", MODE_PRIVATE);
+                    OutputStreamWriter writer = new OutputStreamWriter(file);
+                    writer.write(keyOut);
+                    writer.close();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                dbHandler.pushCredentials(username, password, host);
+                key.setText("Key Is : "+ keyOut);
+                usernameInp.setText("");
+                passwordInp.setText("");
+                hostInp.setText("");
+            }
+        });
     }
 }
